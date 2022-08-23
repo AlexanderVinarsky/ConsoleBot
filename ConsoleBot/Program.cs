@@ -17,27 +17,31 @@ namespace ConsoleApp
 
         public static List<string> l_questions = new List<string>();
         public static List<string> l_answers = new List<string>();
+        public static string token = "";
         public static VkApi vk = new VkApi();
         static void Main(string[] args)
         {
             string path1 = Environment.CurrentDirectory + "/questions.txt";
             string path2 = Environment.CurrentDirectory + "/answers.txt";
-            if (File.Exists(path1) && File.Exists(path2))
+            string path3 = Environment.CurrentDirectory + "/APItoken.txt";
+            if (File.Exists(path1) && File.Exists(path2) && File.Exists(path3))
             {
                 using (StreamReader sr1 = new StreamReader(path1))
                 {
-                    l_questions.Add(sr1.ReadLine());
+                    while (!sr1.EndOfStream) l_questions.Add(sr1.ReadLine());
                 }
                 using (StreamReader sr2 = new StreamReader(path2))
                 {
-                    l_answers.Add(sr2.ReadLine());
+                    while (!sr2.EndOfStream) l_answers.Add(sr2.ReadLine());
+                }
+                using (StreamReader sr3 = new StreamReader(path2))
+                {
+                    token = sr3.ReadToEnd();
                 }
             }
-
-
             vk.Authorize(new ApiAuthParams
             {
-                AccessToken = "",
+                AccessToken = token,
                 Settings = Settings.All
             });
             while (true)
@@ -65,7 +69,7 @@ namespace ConsoleApp
             {
                 a++;
                 Console.WriteLine(a + " " + item);
-                if (item == code)
+                if (code.Contains(item))
                 {
                     break;
                 }
@@ -121,7 +125,6 @@ namespace ConsoleApp
 
                 object[] keys = new object[3] { message, keyname, userid };
                 if (conversationid > 0) vk.Messages.MarkAsRead((conversationid + 2000000000).ToString());
-                Console.WriteLine(conversationid);
                 return keys;
             }
             else

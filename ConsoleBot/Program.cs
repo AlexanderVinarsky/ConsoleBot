@@ -14,7 +14,7 @@ namespace ConsoleApp
 {
     class Program
     {
-
+        
         public static List<string> l_questions = new List<string>();
         public static List<string> l_answers = new List<string>();
         public static VkApi vk = new VkApi();
@@ -26,11 +26,11 @@ namespace ConsoleApp
             {
                 using (StreamReader sr1 = new StreamReader(path1))
                 {
-                    l_questions.Add(sr1.ReadLine());
+                    while (!sr1.EndOfStream) l_questions.Add(sr1.ReadLine());
                 }
                 using (StreamReader sr2 = new StreamReader(path2))
                 {
-                    l_answers.Add(sr2.ReadLine());
+                    while (!sr2.EndOfStream) l_answers.Add(sr2.ReadLine());
                 }
             }
 
@@ -115,13 +115,12 @@ namespace ConsoleApp
                     keyname = "";
                 userid = messages.Messages[0].UserId.Value;
 
-                if (messages.Messages[0].ChatId != null) conversationid = messages.Messages[0].ChatId.Value;
-
+                    if (messages.Messages[0].ChatId != null) conversationid = messages.Messages[0].ChatId.Value;
+                    
 
 
                 object[] keys = new object[3] { message, keyname, userid };
                 if (conversationid > 0) vk.Messages.MarkAsRead((conversationid + 2000000000).ToString());
-                Console.WriteLine(conversationid);
                 return keys;
             }
             else
